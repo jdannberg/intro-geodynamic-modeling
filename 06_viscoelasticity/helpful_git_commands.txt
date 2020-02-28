@@ -1,0 +1,20 @@
+Useful git commands
+(see also https://education.github.com/git-cheat-sheet-education.pdf)
+
+git pull [alias] [branch]
+Fetch and merge any commits from the remote repository branch
+Example: git pull origin master
+
+git push [alias] [branch]
+Transmit local commits to the remote repository branch
+Example: git push mygithub master
+
+gitk
+Start the program gitk that shows the history of the repository
+
+git cola
+Start the program git-cola that allows you to make commits, see local changes, and reset files to their original state
+
+git checkout [filename]
+reset a local file to its original state
+Careful, this means you lose all of your changes, and you can not undo this!
