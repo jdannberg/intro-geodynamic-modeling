@@ -1,0 +1,336 @@
+\documentclass[notitlepage]{article}
+\title{GLY 4450/GLY 5255 Introduction to Geophysics\\Assignment 4}
+\author{Juliane Dannberg}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\usepackage{amsmath}
+\usepackage{gensymb}
+
+\date{\today}
+% Hint: \title{what ever}, \author{who care} and \date{when ever} could stand 
+% before or after the \begin{document} command 
+% BUT the \maketitle command MUST come AFTER the \begin{document} command! 
+\begin{document}
+
+\maketitle
+
+In order to complete this assignment, you will need to run models with ASPECT in the virtual machine, analyse these models, and visualize and discuss your model results in a report. Discuss the setup of the model and the model results as detailed below. You can use resources and data from elsewhere, but you will need to reference these in your report.
+
+
+
+\section{Final project}
+
+In this assignment, everyone of you will investigate a different type of problem. 
+This means that you will have to think about what specific question you want to answer in your report, 
+what model parameters are potentially the most important for that problem 
+and how you want to investigate their influence (in other words, which parameters you want to vary and in what range),
+what tools to use to analyze the models and how to interpret your models. 
+In many case I have suggested some direction for where the assignment could go, 
+but the ideas are purposefully open-ended and you can go in different directions. 
+What I want to see is that you creatively pursue ideas of your own inspired by the project prompts. 
+Make this a research project that involves modeling and whose end product is a written report.
+
+Below you can find some ideas for how to do that. 
+
+\subsection{How to setup and run the models}
+
+
+\paragraph{Update your repository.}
+Update the files in your virtual machine by going to the \texttt{models} folder and typing 
+
+\begin{verbatim}
+git pull origin master
+\end{verbatim}
+
+A folder \texttt{models/assignment\_4} should show up. This folder contains all the different setups
+for your individual models. 
+
+\paragraph{Run the model.}
+To run the model, you need to use the command 
+\begin{verbatim}
+mpirun -np X aspect input_file.prm
+\end{verbatim}
+where X is the number of processors you selected for your virtual machine, and \texttt{input\_file.prm} is the name of the
+input file for your models problem. 
+
+
+\subsection{What should be in your report?}
+
+\paragraph{Start with an introduction.}
+Start with an introductory paragraph that states what you want to do and gives an outlook on the rest of the report.
+
+\paragraph{Describe your model setup.}
+In your report, start by describing the setup of the model and what can be learned from running such a model. 
+State what problem and what question you investigate, and what the major physical processes are you consider. 
+You may have to look for resources online (don't forget to reference those!), 
+for example if you want to compare your models predictions to existing observations. 
+
+Identify the model parameters that are important for your problem, and what is a reasonable parameter range. 
+If there are many important parameters and it is only feasible to vary one or two, explain which ones you picked and why. 
+Use equations to quantify why you think these parameters are important. 
+Also describe how you had to modify the ASPECT input file to set up the model. 
+
+\paragraph{Describe your model results.}
+Then describe your model results. Include the plots that you think illustrate your model predictions best, 
+and that show how your model results are related to the question you want to answer. 
+You have to pick what screenshots/statistics you think are most important. Make sure to label all of your plots
+(including units)! For this assignment, I will not know what property of the model your plot shows!
+Discuss how your model behaves and why it behaves like that. Describe if (and how) your models change when you vary the model parameters. 
+Is there a critical value(s) where the behaviour of the models flips from one state to a different one?
+
+\paragraph{Discuss the predictions of your model.}
+
+Based your model results, discuss the question that is the topic of your report.  
+Also discuss if you think your model predictions are realistic, or if there are other factors that you didn't take into account. 
+Make it clear what the models you ran tell us about the behaviour of the Earth. 
+
+\paragraph{Finish with a conclusion.}
+Summarize your results and any new insights you gained by running the models and analyzing them. 
+
+\section{Specifics}
+
+\begin{itemize}
+\item Write your report in latex, for example using \url{http://www.overleaf.com}.  Use an appropriate style from their very long list of styles. 
+\item Have a look at the assignment until Monday, March 16. We will spend some time in class to work on the assignment and discussing any questions you may have. You can also give me input on what specific tools you would like to learn more about over the next few weeks of class so that you can use that for your assignment. 
+\item Bring a first draft of your report to class on Monday, March 30. This will give you the opportunity to receive feedback on your work.
+\item The final version of your assignment is due Monday, April 6 at 11.45 a.m. You need to submit it before this time through Canvas. 
+\item You will have to give a presentation on this assignment at the end of the semester, starting in the week of April 13. 
+\end{itemize}
+
+\paragraph{Grading will be based on the following rubric:}
+
+\begin{itemize}
+\item Sophistication of the model(s) and their description 20\%: 
+This part evaluates how far you push your models in the quest to describe a process happening in the Earth (or some other body) 
+in realistic and complete ways, and how well you describe your approach. 
+This may include varying model parameters, explaining why you think these parameters are important and what a reasonable parameter range would be, and connecting these thoughts to the physical processes in the Earth. 
+In addition, your parameter variations should be nontrivial cases: There should be substantial differences between the scenarios you are considering. 
+
+\item Correctness and completeness 30\%: 
+Your report should be complete in that you present an arc of thought that starts with a description of the problem setting, 
+the setup of the model, including important parameters and physical processes, 
+the application of the model to the problem in question, your model interpretation, and a conclusion. 
+In other words, you are telling a story. This part evaluates how well you cover everything that contributes to this arc, 
+as opposed to leaving holes where every reader would think ``Why did they not investigate this obvious question?''.
+Your report should be written for someone at your level of knowledge regarding geodynamic models (e.g., a class mate), and not have missing information or missing connections in a train of thought. The models, graphs and fits you present must be correct, and your description and explanation of the models should include all major processes and be easy to comprehend.
+
+\item Insight/Critical thinking 30\%: This may include descriptions of why a particular model yields a certain behavior, 
+how well you understand the ways in which reality and your model differ, 
+or how one would need to modify models to make them more realistic 
+(even if this is not feasible for the current project). 
+It is important to me that you discuss what factors can reasonably be expected to have a major influence on the 
+processes you model, and that you explain how you got to your conclusions. 
+This part of the grading is also about how well you take the broader context into account when considering model predictions. In particular, I will evaluate the comprehensiveness of your reasoning of why the models will/will not result in accurate predictions.
+
+\item Structure, style, language, and clarity 20\%: As a text, your report should be easy to read, i.e., it should be written with a reasonable subdivision into subsections,  in proper English,  and at an appropriate level of technicality suitable for your audience.  It should include formulas where appropriate, and should have visually appealing graphs with axes that are appropriately labelled (including units), color bars with labels etc. Put yourself in the shoes of your reader if you think about whether to include a detail or not. 
+\end{itemize}
+
+\section{Projects}
+
+\subsection{Heat pipe tectonics}
+
+Observations of Jupiter's moon Io suggest a surface heat flux that is much bigger than the Earth's 
+(e.g. Turcotte, Schubert \& Olson estimate the surface heat flux to be 2,500 mW m\textsuperscript{-2},
+approximately 35 times larger than the Earth's surface heat flux of about 70 mW m\textsuperscript{-2}).
+This implies high temperatures in the interior of Io, caused by Io's main heat source, tidal heating,  
+and indicates that Io's interior is partially molten. 
+
+Accordingly, it has been suggested that tectonics on Io is very different from the Earth: 
+Instead of plate tectonics, it may have heat pipe tectonics. In this case, heat is transported to the 
+surface when melt ascends through pipes from the asthenosphere. Where these pipes reach the surface they cause volcanism/lava flows 
+before the material cools, creating a new layer of crust. The same process has been suggested for the early Earth. 
+A short summary of the process is given on \href{https://en.wikipedia.org/wiki/Heat-pipe_tectonics}{Wikipedia}.
+
+The input file \texttt{heat-pipe-tectonics.prm} can be used to investigate this process. 
+One question would be under which conditions heat pipe tectonics is active as opposed to mantle convection with 
+a stable lid as top boundary layer (which may or may not have plate tectonics, some planets also have a so-called
+stagnant lid convection, where the lid does not break). 
+Because the mode of tectonics is controlled by the amount of heat, important parameters in this setting could be
+the amount of heat production (subsection Heating model) and the mantle viscosity (first entry in the List of
+Prefactors for diffusion creep). 
+
+Be fore you can run your models, there is some code you need to compile. 
+You need to do that in the \texttt{models/assignment\_4} folder, by typing
+\begin{verbatim}
+cmake .
+make
+\end{verbatim}
+This will generate a new file, libheat-pipe-viscosity.so, that your input file will use. 
+
+The plugin creates a low-viscosity layer at the top of the model and decreases the viscosity of material
+as its temperatures exceed the solidus and material starts to melt. The physics of melting and freezing itself
+are not included in the model, but the low-viscosity layer near the surface allows material that ascends through 
+the heat pipes to spread to the sides. 
+
+To investigate the type of tectonics, it may be useful to look at the velocity and temperature distribution, 
+and to check whether the model equilibrates thermally (the average model temperature does not increase any longer). 
+Note that because of the weak layer at the surface, sometimes there is an overturn of all material in the model.
+This would not happen in a real 3-D planet, but happens in the 2-D model because the heat pipe breaks though the whole lid 
+of the planet. 
+
+\subsection{Core-mantle boundary heat flow and magnetic field reversals}
+
+Reversals of Earth's magnetic field do not happen with a regular frequency. Instead, there are times where 
+the magnetic field reverses with a high frequency, and there are times where it remains stable for a long time
+(\href{https://en.wikipedia.org/wiki/Geomagnetic_reversal}{Wikipedia} has a list of geomagnetic reversals in
+the last 100 million years). 
+
+The dynamo in the Earth's outer core that generates the magnetic field can only convect if there is enough heat
+flux from the outer core into the overlying mantle. Correspondingly, it has been suggested that in times of 
+high heat flux across the core-mantle boundary, the magnetic field remains relatively stable, while in times 
+of low core-mantle boundary heat flow, the reversal frequency is high. 
+The heat flux across the core-mantle boundary depends on when plumes rise, and when subducted slabs arrive in
+the lowermost mantle. The input file \texttt{CMB-heat-flow.prm} can be used to model convection with chemical
+heterogeneities and make predictions about the heat flux near the core-mantle boundary over time. 
+
+One interesting question would be to find out if there is a model configuration where variations in the core-mantle
+boundary heat flow correspond to observed reversals of the magnetic field, in the sense that periods of high heat flux
+have about the same duration as times where geomagnetic reversal frequency is low. (Note that the statistics file lists
+the outward heat flux through all boundaries, so to compute the heat flow out of the core and \textit{into} the mantle, you 
+have to reverse the sign.) Important parameters controlling the timescale of convection are the mantle viscosity 
+(Parameter Viscosity) and the density of the chemically heterogeneous material (Density differential for compositional field 1). 
+
+\subsection{Subduction initiation}
+
+One hypothesis for places on Earth where it is easy to initiate subduction is at passive margins of continents. 
+The density of the continental crust and lithosphere is low compared to the oceanic plate, and the older and 
+colder the oceanic plate, the larger the buoyancy force that can drag the plate down. On the other hand, their cold 
+temperatures make old plates also very stiff and hard to break. 
+So one interesting question is to investigate under which conditions subduction can initiate. 
+
+The input file \texttt{subduction-initiation.prm} can be used to investigate the initiation of subduction. 
+In the model, there already is a weak zone between the continent and the oceanic plate that makes it easier
+for subduction to initiate. Model parameters that control when subduction initiates could be the
+stress acting on the overriding plate (the function constant "stress" in the Boundary traction model) and 
+how weak the existing weak zone is (last entry in the "Angles of internal friction" list of parameters). 
+Other parameters that may be important are the age and thickness of oceanic lithosphere. 
+
+\subsection{Subduction angle}
+
+There is a variety of subduction zones on Earth with different subduction rates, rollback rates and slab angle. 
+The geometry of the subduction zones influences deformation within the slab, but also the mantle flow around
+the the subducted slab. 
+
+The input file \texttt{subduction.prm} can be used to model subduction zones with different angles. 
+The angles are not prescribed, but develop self-consistently. Parameters that influence how flat or steep
+the slab subducts are for example the slab dip of the initial thermal anomaly that triggers subduction
+(slab\_dip parameter in Initial temperature model and Initial composition model), but also the activation 
+volume of diffusion creep (first entry in the list of Activation volumes for diffusion creep), which controls 
+how mantle viscosity changes with depth. 
+The density of the lithosphere (third entry of the Densities parameter) can also influence the angle of subduction.
+
+\subsection{Cascadia subduction}
+
+The origin of the Columbia River flood basalts and the related Yellowstone volcanism remains under debate, 
+but one hypothesis is that the volcanism originates from the interaction of a mantle plume with the 
+Cascadia and Farallon subduction zones (see for example Liu et al., 2012 and Kincaid at al., 2013). 
+The input file \texttt{cascadia-subduction.prm} can be used to model this interaction. 
+
+You will first need to run the input file \texttt{cascadia-subduction.prm}. This may take a while, but you
+do not need to modify that file and you only need to run it once. 
+It will create a model of a subducted slab, and will save the final state so that 
+you can restart your computation from there. When the model run is finished, ASPECT writes a number of files 
+that all have \texttt{restart} in their file name (specifically, restart.resume.z, restart.mesh and restart.mesh.info). 
+
+Now you can run the input file \texttt{cascadia-subduction-restart.prm}. In this file, a plume enters the model 
+from the bottom. This file can be used to investigate the interaction of a plume with a subducted slab, and under
+which conditions the plume will be deflected by the slab, break through the slab, or interact with the slab in a 
+different way. Important model parameters could be the position (parameter x\_plume in the subsections Boundary 
+velocity model and Boundary temperature model) and temperature (parameter T\_plume in the subsection Boundary 
+temperature model) of the plume, but also the strength of the subducting plate (third value in the list of 
+Prefactors for dislocation creep, Prefactors for diffusion creep and Activation energies for diffusion creep). 
+In the \texttt{cascadia-subduction-restart.prm} file the parameters are set to values that make the viscosity of the
+slab almost as low as the surrounding mantle. This is not realistic, but demonstrates in what direction/order
+of magnitude the parameters need to be changed compared to the original file to affect the viscosity. 
+
+Note that if you want to run models in different output directories, you first have to copy the restart files into a 
+folder with the name of the new output directory you specify in the input file, otherwise ASPECT will not find 
+the restart file. 
+
+\subsection{Postglacial rebound}
+
+Postglacial rebound models can be connected to sea-level rise since the last glacial maximum. 
+In a region, the local sea level change depends both on the amount of postglacial rebound and the global change in sea level. 
+The global sea level has risen by about 120 m since the last glacial maximum. One model for global sea level rise
+can be found on the \href{https://www.giss.nasa.gov/research/briefs/gornitz_09/}{NASA webpage}, and it suggests that 
+the global sea level has risen approximately linearly between 18,000 years ago and 5,000 years ago (while changes before
+and after that are smaller). 
+
+Postglacial rebound can be modeled using the input file \texttt{postglacial\_rebound.prm}. 
+It depends for example on the deglaciation history, the location of a region with respect to the ice sheet 
+(i.e. near the center or near the margin), the shape/size of the ice sheet (parameter Function constants and 
+Function expression in the subsection Boundary traction model, the current shape is a Gaussian with a width of 
+1000 km and a maximum thickness of 3 km), and mantle viscosity (first parameter in the list of Viscosities). 
+One simple assumption is that the thickness of the ice shields decreased with the same rate as sea level rise. 
+In addition, models of postglacial rebound should fit present-day uplift rates (as discussed in lecture 
+13\_geophysics\_lecture\_02\_28 that can be found on Canvas). 
+
+An interesting question could be to pick a region on Earth that was below or near an ice sheet during the last 
+glacial maximum, and to investigate how its elevation over sea level has changed since then (in particular for
+a location near the coastline). One example would be Greenland: An overview over different locations including their
+present-day uplift rates can be found in \href{https://link.springer.com/article/10.1007/s40641-016-0040-z}{Wake et al. 2016}. 
+
+In addition to the normal visualization output, this model also writes separate files for the topography in each time step. 
+They are located in the output folder (by default \texttt{postglacial-rebound}) and can be plotted using gnuplot with the command
+\begin{verbatim}
+plot "topography.XXXXX" using 1:3 with lines
+\end{verbatim} 
+where XXXXX is the 5-digit number of the output file (corresponding to the time step number). 
+
+\subsection{Dynamic topography of ocean islands}
+
+When mantle plumes approach the surface, their ascent is stopped at the rigid base of the lithospheric plate. 
+Because of their positive buoyancy, they push against the base of the plate, which leads to topographic uplift
+at the surface. This positive topography is called dynamic topography, because it originates from the motion of 
+the mantle plume (as opposed to equilibrated static density differences). 
+
+This so-called hot spot swell is large where the plume reaches the surface, but as the plate moves across the 
+stationary hot spot in the mantle, the topography is no longer supported by the plume and the surface subsides again. 
+This means that these volcanic ocean islands sink below the sea level over time. An example giving the ages and 
+elevations of the Hawaiian seamounts can be found on this \href{https://www.mtholyoke.edu/courses/mdyar/ast106/earth_hw_a.html}{website}.
+
+The input file \texttt{dynamic-topography.prm} can be used to model this process. Parameters that control
+the uplift history of an ocean island are the temperature and radius of the mantle plume (controlled by the parameters 
+Tplume and rplume) and the thickness and rigidity of the lithospheric plate (controlled by the parameters 
+lithosphere\_thickness and the last entry in the list of Elastic shear moduli). 
+The plate velocity may also play a role, but as dynamic topography is difficult to compute in models with a moving plate, 
+this model does not take this effect into account. Instead, the plume is modeled as a thermal anomaly that cools down once it has reached the base of the tectonic plate. 
+
+One interesting question to ask could be what model parameters fit the subsidence
+history of a specific ocean island chain (like the one for Hawaii given above). 
+In such a comparison, it is important to keep in mind that there are other effects that can change the elevation of an island/seamount with age, such as erosion, so the fit may not be optimal. 
+
+In addition to the normal visualization output, this model also writes separate files for the topography in each time step. 
+They are located in the output folder (by default \texttt{dynamic-topography}) and can be plotted using gnuplot with the command
+\begin{verbatim}
+plot "topography.XXXXX" using 1:3 with lines
+\end{verbatim} 
+where XXXXX is the 5-digit number of the output file (corresponding to the time step number). 
+
+\section{Where to find more information}
+
+\paragraph{Input parameters, their units and their meaning}
+All input parameters are documented here: \url{https://aspect.geodynamics.org/doc/parameter_view/parameters.xml}. 
+If you are unsure what an input parameter means, or what its units are, there is a search field at the top where you can type in the parameter you want to know more about. The website will expand all of the subsections that contain a parameter with that name (sometimes, parameters like `Viscosity' appear in more than one subsection, because they can be used as part of different material descriptions, in this case you have to pick the one that is in the same subsection as the one in your input file). If you click on the parameter, it will show a documentation of the parameter, including its units. 
+
+\paragraph{ParaView}
+You can download a ParaView guide from here: \url{https://www.paraview.org/paraview-downloads/download.php?submit=Download&version=v5.7&type=data&os=Sources&downloadFile=ParaViewGuide-5.7.0.pdf}. I realize the guide is 260 pages long, so it is not very helpful if you start out learning ParaView and want to learn basic functionality, but is mostly useful if you remember that, for example, there was a filter called `Stream Tracer', but forgot what all of its different options are. In that case you can go to the section of the manual that describes the `Stream Tracer' filter and how to use it. 
+If you want a recap on the basic functionality, there is a short video tutorial on YouTube: \url{https://www.youtube.com/watch?v=Y1RATo2swM8}. But please don't use the rainbow color scale as he does! It has been shown to be misleading, in the sense that it can make it look like there are features in the data that are not really there, and that it can hide other, real features in the data. 
+
+\paragraph{Gnuplot}
+gnuplot is a command-line drive graphics program for linux. 
+You can find more information and help on what commands there are in gnuplot here: \url{http://www.gnuplot.info/}. They have a lot of examples (that can be found under Demos) that show you how a given plot will look like and the code to create a plot like this. 
+But if there is a specific command I don't know, I usually just google something like ``gnuplot how do I change the x axis to log scale'' to find the answer. 
+
+\section*{References}
+Schubert, G., Turcotte, D. L., \& Olson, P. (2001). Mantle convection in the Earth and planets. Cambridge University Press.
+
+Liu, L., \& Stegman, D. R. (2012). Origin of Columbia River flood basalt controlled by propagating rupture of the Farallon slab. \textit{Nature}, 482(7385), 386-389.
+
+Kincaid, C., Druken, K. A., Griffiths, R. W., \& Stegman, D. R. (2013). Bifurcation of the Yellowstone plume driven by subduction-induced mantle flow. Nature Geoscience, 6(5), 395-399.
+
+Wake, L. M., Lecavalier, B. S., \& Bevis, M. (2016). Glacial isostatic adjustment (GIA) in Greenland: A review. \textit{Current Climate Change Reports}, 2(3), 101-111.
+
+\end{document}
