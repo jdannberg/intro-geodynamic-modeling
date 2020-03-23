@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# bash script for running several ASPECT models in a row
+# All lines that start with # are comments (except the first one above)
+
+# Number of processors to run on
+NP=1
+
+# generate some screen output
+echo "----Running models now----"
+
+# loop over the different model parameters
+for viscosity in "1e24" "1e25" "1e26"
+do
+  for DeltaT in "10" "100" "1000"
+  do  
+
+    # Modify the name of the output directory
+    echo "Running model with a viscosity of $viscosity Pa s and a temperature jump of $DeltaT:"
+    cp onset-convection.prm temp.prm
+    name=$viscosity"_"$DeltaT
+    echo "set Output directory = models/name_$name" >> temp.prm
+
+    # Modify when to stop the model runs
+    echo "subsection Termination criteria" >> temp.prm
+    echo "  set End step                             = 0" >> temp.prm
+    echo "end" >> temp.prm
+
+    # Change first parameter
+    echo "subsection Boundary temperature model" >> temp.prm
+    echo "  subsection Box" >> temp.prm
+    echo "    set Bottom temperature = $DeltaT" >> temp.prm
+    echo "  end" >> temp.prm
+    echo "end" >> temp.prm
+
+    # Change second parameter
+    echo "subsection Material model" >> temp.prm
+    echo "  subsection Simple model" >> temp.prm
+    echo "    set Viscosity                     = $viscosity" >> temp.prm
+    echo "  end" >> temp.prm
+    echo "end" >> temp.prm
+
+    # Do the actual model run
+    mpirun -n $NP aspect temp.prm
+  done
+done
