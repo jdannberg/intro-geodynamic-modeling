@@ -1,0 +1,146 @@
+#########################################################
+# This is a variation of the composition-active.prm file.
+#
+# See the manual for more information about this setup.
+
+
+set Dimension                              = 2
+set Start time                             = 0
+set End time                               = 3.5e9
+set Output directory                       = output-recycling
+set Adiabatic surface temperature          = 1600
+
+	
+subsection Geometry model
+  set Model name = box
+
+  subsection Box
+    set X extent = 9000000
+    set Y extent = 3000000
+    set X repetitions = 3
+  end
+end
+
+
+subsection Boundary temperature model
+  set Fixed temperature boundary indicators = bottom, top
+  set List of model names = box
+
+  subsection Box
+    set Bottom temperature = 2500
+    set Top temperature    = 293
+  end
+end
+
+
+subsection Boundary velocity model
+  set Tangential velocity boundary indicators = left, right, bottom, top
+end
+
+
+subsection Gravity model
+  set Model name = vertical
+  subsection Vertical
+    set Magnitude = 10
+  end
+end
+
+
+subsection Initial temperature model
+  set Model name = adiabatic
+  subsection Adiabatic
+    set Age top boundary layer = 1e8
+    set Age bottom boundary layer = 1e8
+
+    subsection Function
+      set Function expression = 0; 0
+    end
+  end
+end
+
+
+# Compared to the passive material model, we here make
+# the density composition dependent by letting it depend
+# linearly on the value of the first compositional field.
+subsection Material model
+  set Model name = composition reaction 
+
+  subsection Composition reaction model
+    set Reference density = 3300
+    set Reference temperature = 1600
+    set Reference specific heat = 1250
+    set Density differential for compositional field 1 = -100
+    set Density differential for compositional field 2 = 150
+    set Viscosity = 4e22
+    set Composition viscosity prefactor 1 = 1.0
+    set Composition viscosity prefactor 2 = 1.0
+    set Thermal viscosity exponent = 4.0
+  end
+end
+
+
+subsection Mesh refinement
+  set Initial adaptive refinement        = 1
+  set Initial global refinement          = 4
+  set Time steps between mesh refinement = 10
+  set Strategy                           = composition threshold
+  set Minimum refinement level           = 4
+
+  subsection Composition threshold
+    set Compositional field thresholds   = 0.2, 0.2
+  end
+end
+
+
+subsection Postprocess
+  set List of postprocessors = visualization, temperature statistics, composition statistics, particles, heat flux map, heat flux statistics
+
+  subsection Visualization
+    set List of output variables = material properties
+    set Time between graphical output = 1e5
+  end
+
+  subsection Particles
+    set Number of particles = 25000
+    set Time between data output = 0 
+    set Data output format = vtu 
+    set List of particle properties = initial composition
+    set Interpolation scheme = cell average
+
+    set Particle generator name = probability density function
+
+    subsection Generator
+      subsection Probability density function
+        set Variable names = x,y,t
+        set Function expression = if(y>2800000,1,0.1)
+      end
+    end
+  end 
+
+end
+
+
+# Here, we track compositional fields via active particle particles.
+# The initial composition assigned to the particles is 'mapped' 
+# to the particles at each time step.  This property is accessed in 
+# the material model through a compositional field (standard method) 
+# whose values are interpolated from the particles.
+subsection Compositional fields
+  set Number of fields = 2
+  set Names of fields = mantle, crust
+  set Compositional field methods = particles, particles
+  set Mapped particle properties = mantle:initial mantle, crust:initial crust
+end
+
+subsection Initial composition model
+  set Model name = function
+
+  subsection Function
+    set Variable names      = x,y
+    set Function expression = if(y<2950000 && y>2850000, 1, 0); if(y>2950000, 1, 0)
+  end
+end
+
+subsection Heating model
+  set List of model names = 
+end
