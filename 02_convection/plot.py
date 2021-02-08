@@ -8,7 +8,7 @@ y = np.genfromtxt('onset-convection-data.csv', dtype=float, delimiter=' ', useco
 z1 = np.genfromtxt('onset-convection-data.csv', dtype=float, delimiter=' ', usecols = (2))
 z2 = np.genfromtxt('onset-convection-data.csv', dtype=float, delimiter=' ', usecols = (3))
 
-z=z1/z2
+z=z2/z1
 
 # make the plot
 fig, ax = plt.subplots()
