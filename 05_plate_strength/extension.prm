@@ -220,5 +220,5 @@ subsection Solver parameters
 end
 
 subsection Nullspace removal
-#  set Remove nullspace = linear momentum
+  set Remove nullspace = net x translation
 end
