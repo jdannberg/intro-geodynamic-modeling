@@ -46,7 +46,10 @@ subsection Boundary velocity model
 
   subsection Function
     set Variable names      = x,z
-    set Function constants  = v=1, cm_per_year=0.05
+
+    # We can choose a (half-)spreading rate by changing the value of v (in cm/year)
+    # This value should be somewhere between 1 and 10 (cm/yr)
+    set Function constants  = v=5, cm_per_year=0.01
     set Function expression = if(x>0, v * cm_per_year, -v * cm_per_year); 0
   end
 end
@@ -111,8 +114,10 @@ subsection Postprocess
 
   subsection Visualization
     set Time between graphical output = 1e5
-    set List of output variables = density, heat flux map, vertical heat flux
+    set List of output variables = material properties, heat flux map, vertical heat flux
+
+    subsection Material properties
+      set List of material properties = density, thermal conductivity, specific heat
+    end
   end
 end
-
-

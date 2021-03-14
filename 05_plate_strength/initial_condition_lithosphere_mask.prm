@@ -43,11 +43,7 @@ subsection Initial temperature model
 end
 
 subsection Gravity model
-  set Model name = vertical
-
-  subsection Vertical
-    set Magnitude = 10
-  end
+  set Model name = ascii data
 end
 
 
@@ -61,7 +57,7 @@ subsection Mesh refinement
 
   subsection Minimum refinement function
     set Variable names      = depth, phi, theta
-    set Function expression = if (depth<100000,5,if (depth<200000,4,1))
+    set Function expression = if (depth<200000,10,if (depth<300000,4,1))
   end
 end
 

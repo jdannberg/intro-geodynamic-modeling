@@ -6,8 +6,9 @@ set Dimension                              = 2
 set Start time                             = 0
 set End time                               = 1e7
 set Use years in output instead of seconds = true
-set Output directory                       = output-heat-flow-2
+set Output directory                       = output-plume
 set Adiabatic surface temperature          = 1600
+set Maximum time step                      = 1e6
 
 ############### Parameters describing the model
 # Let us here choose again a box domain of size 2x1
@@ -109,7 +110,7 @@ end
 
 
 subsection Postprocess
-  set List of postprocessors = visualization, temperature statistics, heat flux statistics
+  set List of postprocessors = visualization, temperature statistics, heat flux densities
 
   subsection Visualization
     set Time between graphical output = 1e5
@@ -120,5 +121,3 @@ subsection Postprocess
     end
   end
 end
-
-
