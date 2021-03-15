@@ -1,0 +1,255 @@
+# This example is similar the the 3rd assignment, except that
+# the focus is on a compressional rather than an extensional setting,  
+# and the model starts with an initial positive topography. 
+# I picked parameters for the Altiplano plateau (in terms of 
+# topography and lithosphere thickness), but feel free to change that
+# in the Initial Topography model section (for example, Hmax is the 
+# original height of the orogen, which is set to 4 km, but some 
+# orogens were initially as high as 8 km).
+
+# Some important parameters that influence what happens to this initial
+# topography are crustal thicknening (how much is the plateau supported
+# by its crustal root, which is less dense than the material surrounding 
+# it), and how easy it is to deform the crust. 
+
+# You can change these two parameters by changing the values for
+# (1) crustal_thickness_change in the initial composition model, and
+# (2) the last entry in Angles of internal friction in the Material model. 
+
+
+####  Global parameters
+set Dimension                              = 2
+set Start time                             = 0
+set End time                               = 1e100
+set Use years in output instead of seconds = true
+set Nonlinear solver scheme                = single Advection, iterated Stokes
+set Nonlinear solver tolerance             = 1e-4
+set Max nonlinear iterations               = 5
+set CFL number                             = 0.1
+set Output directory                       = orogenic-collapse
+set Timing output frequency                = 1
+set Pressure normalization                 = no
+set Maximum time step                      = 2e6
+
+subsection Termination criteria
+  set Termination criteria = end step
+  set End step = 50
+end
+
+#### Parameters describing the model
+
+subsection Geometry model
+  set Model name = box 
+  subsection Box 
+    set X repetitions = 6
+    set Y repetitions = 1
+    set X extent      = 1000e3
+    set Y extent      = 250e3
+    set Box origin X coordinate = -500e3
+  end
+  
+  subsection Initial topography model
+    set Model name = function
+    subsection Function
+      set Function constants = Hmax = 4000, width = 100e3
+      set Function expression = Hmax * (1 - if(x*x/(width*width)<=1,0,exp(-1/(x*x/(width*width)-1))) / (if(x*x/(width*width)<=1,0,exp(-1/(x*x/(width*width)-1))) + if(x*x/(width*width)>=2,0,exp(1/(2-x*x/(width*width))))))
+      set Maximum topography value = 10000
+#      set Function expression = if(x<0,4000,0)
+    end
+  end
+end
+
+subsection Discretization
+  set Use discontinuous composition discretization = true
+
+  subsection Stabilization parameters
+    set Use limiter for discontinuous composition solution = true
+    set Global composition maximum = 1,1,1,1
+    set Global composition minimum = 0,0,0,0
+  end
+end
+
+subsection Mesh refinement
+  set Initial adaptive refinement        = 0
+  set Initial global refinement          = 4
+  set Time steps between mesh refinement = 0
+end
+
+# Advecting the free surface vertically rather than
+# in the surface normal direction can result in a
+# more stable mesh when the deformation is large
+subsection Mesh deformation
+  set Mesh deformation boundary indicators        = top: free surface
+  set Additional tangential mesh velocity boundary indicators = left, right
+  subsection Free surface
+    set Surface velocity projection = vertical
+  end
+end
+
+subsection Boundary velocity model
+  set Zero velocity boundary indicators = bottom
+end
+
+subsection Boundary traction model
+  set Prescribed traction boundary indicators = left:function, right:function
+
+  subsection Initial lithostatic pressure
+    set Representative point = 0.0,0.0
+  end
+
+  subsection Function
+    set Variable names      = x,y
+
+    # The following line is the stress applied to the side boundaries (in Pa)
+    set Function constants  = stress= 0 #2e8
+    set Function expression = if (x<0 , if(y>150000,31000*(250000-y)+stress,3080000000+31900*(150000-y)), if(y>150000,-31000*(250000-y)-stress,-3080000000-31900*(150000-y))); 0
+  end
+end
+
+
+# Number and names of compositional fields
+# The four compositional fields represent the upper crust, lower crust, mantle
+# and a 'seed' placed in the mantle to help localize deformation.
+subsection Compositional fields
+  set Number of fields = 4
+  set Names of fields = lithosphere, seed, sides, crust
+end
+
+
+
+subsection Initial composition model
+  set List of model names = ascii data layered, function
+  subsection Ascii data model
+    set Data directory        = ./
+    set Data file names       = lithosphere.txt, top.txt
+    set Interpolation scheme  = piecewise constant
+  end
+
+  subsection Function
+    set Variable names      = x,y
+    set Function constants  = pi=3.1416, width=100e3, crustal_thickness_change = 40000
+    set Function expression = 0; 0; 0.5+0.5*tanh((-400000-x)/50000)+0.5+0.5*tanh((x-400000)/50000); if(y>220000 - crustal_thickness_change * exp(-(x*x)/(width*width)),1,0)
+  end
+end
+
+
+
+# Composition: fixed on bottom, free on sides and top
+subsection Boundary composition model
+  set Fixed composition boundary indicators = bottom, left, right
+  set List of model names = initial composition
+end
+
+# Temperature boundary conditions
+# Top and bottom (fixed) temperatures are consistent with the initial temperature field
+# Note that while temperatures are specified for the model sides, these values are
+# not used as the sides are not specified "Fixed temperature boundaries".  Rather,
+# these boundaries are insulating (zero net heat flux).
+subsection Boundary temperature model
+  set Fixed temperature boundary indicators = bottom, top
+  set List of model names = initial temperature
+end
+
+subsection Initial temperature model
+  set List of model names = ascii data layered, function
+  subsection Ascii data model
+    set Data directory        = ./
+    set Data file names       = lithosphere_T.txt, top_T.txt
+    set Interpolation scheme  = linear
+  end
+
+  subsection Function
+    set Variable names      = x,y
+    set Function constants  = T0=0
+    set Function expression = T0*exp(-((x-1000000)^2+10*y^2)/600000^2)
+  end
+end
+
+
+
+# Material model
+# Rheology: Non-linear viscous flow and Drucker Prager Plasticity
+# Values for most rheological parameters are specified for a background material and
+# each compositional field.  Values for viscous deformation are based on dislocation
+# creep flow-laws, with distinct values for the upper crust (wet quartzite), lower
+# crust (wet anorthite) and mantle (dry olivine).  Table 1 of Naliboff and Buiter (2015),
+# Earth Planet. Sci. Lett., v.421, p. 58-67 contains values for each of these flow laws.     
+subsection Material model
+  set Model name = visco plastic
+
+  subsection Visco Plastic
+
+    # Reference temperature and viscosity
+    set Reference temperature = 1000
+    set Reference viscosity = 1e22
+    
+    # The minimum strain-rate helps limit large viscosities values that arise
+    # as the strain-rate approaches zero.
+    # The reference strain-rate is used on the first non-linear iteration
+    # of the first time step when the velocity has not been determined yet. 
+    set Minimum strain rate = 1.e-20
+    set Reference strain rate = 1.e-16
+
+    # Limit the viscosity with minimum and maximum values
+    set Minimum viscosity = 1e19
+    set Maximum viscosity = 1e25
+
+    # Thermal diffusivity is adjusted to match thermal conductivities
+    # assumed in assigning the initial geotherm
+    set Thermal diffusivities = 1.333333e-6
+    set Heat capacities       =        750.
+    set Densities             =        3300, 3200, 3200, 3300, 2700
+    set Thermal expansivities =        2e-5
+
+    # Harmonic viscosity averaging
+    set Viscosity averaging scheme = geometric
+
+    # Choose to have the viscosity (pre-yield) follow a dislocation
+    # diffusion or composite flow law.  Here, dislocation is selected
+    # so no need to specify diffusion creep parameters below, which are
+    # only used if "diffusion" or "composite" option is selected.
+    set Viscous flow law = diffusion
+
+    set Prefactors for diffusion creep          =    1e-17
+    set Activation energies for diffusion creep = 375e3, 375e3, 375e3, 375e3, 375e3
+    set Activation volumes for diffusion creep  =        0
+
+    # Plasticity parameters
+    # The last value can be reduced (down to a value of 0) to make the crust easier to deform 
+    set Angles of internal friction =   20, 20, 20, 20, 20
+    set Cohesions                   = 20.e6, 20.e6, 20.e6, 20.e100, 2.e6
+
+  end
+end
+
+# Gravity model
+subsection Gravity model
+  set Model name = vertical
+
+  subsection Vertical
+    set Magnitude = 9.81
+  end
+end
+
+
+# Post processing
+subsection Postprocess
+  set List of postprocessors = velocity statistics, basic statistics, temperature statistics, visualization, topography, velocity boundary statistics
+  subsection Visualization
+    set List of output variables = density, viscosity, strain rate, named additional outputs, stress, nonadiabatic pressure
+    set Output format = vtu
+    set Time between graphical output = 0
+    set Interpolate output = true
+  end
+end
+
+
+subsection Solver parameters
+  subsection Stokes solver parameters
+    set Linear solver tolerance = 1e-5
+  end
+end
+
+subsection Nullspace removal
+  set Remove nullspace = net x translation
+end

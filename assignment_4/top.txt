@@ -1,0 +1,10 @@
+# Test data for layered ascii data initial composition conditions.
+# The following data defines a surface in 2D cartesian space which
+# will be used to define the top of the mantle in
+# tests/ascii_data_layered_initial_composition_2d_box.prm.
+# Only next line is parsed in format: [nx] [ny] because of keyword "POINTS:"
+# POINTS: 2
+# Columns: x y composition
+0	250000	1	0	0	0
+2000000	250000	1	0	0	0
+

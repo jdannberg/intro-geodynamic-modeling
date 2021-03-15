@@ -1,0 +1,183 @@
+# A model of melting in a rising mantle plume.
+# The model is quite similar to the setup from the first assignment 
+# used to compute the heat flux at hot spots. 
+
+# You can change the the plume temperature using the parameter "DeltaT"
+# and the thickness of the lithosphere using the parameter 
+# "set Age top boundary layer". 
+# You can change the composition of the plume by changing the parameter
+# pyroxenite_fraction in the Initial composition model. 
+# A value of zero assumes that the plume has the same composition as 
+# the average mantle, and the pyroxenite fraction (which would generally 
+# not be expected to be larger than 0.2 = 20%) gives the fraction of 
+# compositionally distinct material (in this case, assumed to be recycled 
+# crust). 
+
+############### Global parameters
+
+set Dimension                              = 2
+set Start time                             = 0
+set End time                               = 2e6
+set Use years in output instead of seconds = true
+set Output directory                       = output-plume
+set Adiabatic surface temperature          = 1600
+set Maximum time step                      = 1e6
+
+############### Parameters describing the model
+# Let us here choose again a box domain of size 2x1
+# where we fix the temperature at the bottom and top,
+# allow free slip along the bottom, left and right,
+# and prescribe the velocity along the top using the
+# `function' description.
+
+subsection Geometry model
+  set Model name = box
+
+  subsection Box
+    set X extent = 800000
+    set Y extent = 400000
+    set X repetitions = 2
+  end
+end
+
+
+
+subsection Boundary temperature model
+  set Fixed temperature boundary indicators = bottom, top
+  set List of model names = initial temperature
+  
+  subsection Initial temperature
+    set Maximal temperature = 1600
+    set Minimal temperature = 293
+  end
+end
+
+
+subsection Boundary velocity model
+  set Prescribed velocity boundary indicators = left y: function, right y:function, top:function
+
+  subsection Function
+    set Variable names      = x,z
+    set Function expression = 0;0
+  end
+end
+
+subsection Boundary traction model
+  set Prescribed traction boundary indicators = bottom:initial lithostatic pressure,right x:initial lithostatic pressure, left x:initial lithostatic pressure
+
+  subsection Initial lithostatic pressure
+    set Representative point = 0,0
+    set Number of integration points = 1000
+  end
+end
+
+
+# We then choose a vertical gravity model.
+subsection Gravity model
+  set Model name = vertical
+  subsection Vertical
+    set Magnitude = 9.81
+  end
+end
+
+
+subsection Initial temperature model
+  set List of model names = adiabatic, function
+  
+  subsection Adiabatic
+    # This is the age in years. 
+    set Age top boundary layer = 1.3e8
+  end
+
+  subsection Function
+    set Variable names      = x,z
+    set Function constants  = DeltaT=250
+    set Function expression = DeltaT * exp(-((z*z)+(x-400000)*(x-400000))/(1.5e9))  
+  end
+end
+
+
+subsection Material model
+
+  set Model name = latent heat melt
+
+  subsection Latent heat melt
+    set Thermal conductivity          = 4.7
+    set Thermal expansion coefficient = 2e-5
+    set Viscosity                     = 1.5e19
+    set Thermal viscosity exponent    = 15.0
+    set Reference temperature         = 1600
+    set Density differential for compositional field 1 = 10
+  end
+
+#  set Model name = melt simple 
+  subsection Melt simple
+    set Reference solid density = 3400
+    set Reference melt density = 2776
+    set Thermal expansion coefficient = 3.5e-5
+    set Reference permeability = 1e-8
+    set Reference shear viscosity = 2e19
+    set Reference bulk viscosity = 1e20
+    set Exponential melt weakening factor = 0
+    set Thermal viscosity exponent = 10
+    set Reference temperature = 1600
+    set Melt extraction depth = 0.0
+    set Solid compressibility = 3.2e-12
+    set Melt compressibility = 3.8462e-11
+    set Melt bulk modulus derivative = 1.6
+    set Use full compressibility = true
+  end
+end
+
+
+# Number and names of compositional fields
+# The four compositional fields represent the upper crust, lower crust, mantle
+# and a 'seed' placed in the mantle to help localize deformation.
+subsection Compositional fields
+  set Number of fields = 1
+  set Names of fields = pyroxenite
+end
+
+
+subsection Initial composition model
+  set Model name = function
+  subsection Function
+    set Function constants  = pyroxenite_fraction = 0.1, b = 400000, c = 30000
+    set Function expression = pyroxenite_fraction * exp(-((x-b)*(x-b)+y*y)/(2*c*c))
+    set Variable names      = x,y
+  end
+end
+
+subsection Boundary composition model
+  set Fixed composition boundary indicators = bottom
+  set Model name = initial composition
+end
+
+
+# The final part of this input file describes how many times the
+# mesh is refined and what to do with the solution once computed
+subsection Mesh refinement
+  set Initial adaptive refinement        = 5
+  set Initial global refinement          = 0
+  set Time steps between mesh refinement = 0
+  set Strategy                           = minimum refinement function
+
+  subsection Minimum refinement function
+    set Variable names = depth, z
+    set Function expression = if(depth<7000,6,if(depth<30000,5,5))
+  end
+end
+
+
+subsection Postprocess
+  set List of postprocessors = visualization, temperature statistics, heat flux densities
+
+  subsection Visualization
+    set Time between graphical output = 5e4
+    set List of output variables = material properties, heat flux map, vertical heat flux, melt fraction
+
+    subsection Material properties
+      set List of material properties = density, thermal expansivity, specific heat, viscosity, thermal conductivity
+    end
+  end
+end

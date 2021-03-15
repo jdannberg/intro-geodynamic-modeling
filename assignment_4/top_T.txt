@@ -1,0 +1,7 @@
+# Initial temperature
+# Only next line is parsed in format: [nx] [ny] because of keyword "POINTS:"
+# POINTS: 2
+# Columns: x y temperature
+0	250000	293
+2000000	250000	293
+
