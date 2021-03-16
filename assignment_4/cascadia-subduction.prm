@@ -4,11 +4,6 @@
 # - young slab being subducted
 # - flat subduction
 
-# Change the age of the subducting plate (age parameter in Initial temperature model
-# and Initial composition model; note that this is in seconds), 
-# and the activation volume of diffusion creep to change the subduction angle. 
-# You may need to reduce the resolution if this model takes a long time. 
-
 set Dimension                              = 2
 set Start time                             = 0
 set End time                               = 3.8e7
@@ -32,7 +27,8 @@ subsection Solver parameters
   subsection Stokes solver parameters
     set Linear solver tolerance                = 1e-4
     set Number of cheap Stokes solver steps    = 1500
-    set GMRES solver restart length        = 300
+    set GMRES solver restart length            = 300
+    set Stokes solver type                     = block GMG
   end
 end
 

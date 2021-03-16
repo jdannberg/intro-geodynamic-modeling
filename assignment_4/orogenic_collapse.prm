@@ -1,4 +1,4 @@
-# This example is similar the the 3rd assignment, except that
+# This example is similar to the 3rd assignment, except that
 # the focus is on a compressional rather than an extensional setting,  
 # and the model starts with an initial positive topography. 
 # I picked parameters for the Altiplano plateau (in terms of 
@@ -15,6 +15,9 @@
 # You can change these two parameters by changing the values for
 # (1) crustal_thickness_change in the initial composition model, and
 # (2) the last entry in Angles of internal friction in the Material model. 
+
+# You can also change the stress in the Boundary traction model (positive 
+# values are compressive stresses). 
 
 
 ####  Global parameters
@@ -170,10 +173,8 @@ end
 # Material model
 # Rheology: Non-linear viscous flow and Drucker Prager Plasticity
 # Values for most rheological parameters are specified for a background material and
-# each compositional field.  Values for viscous deformation are based on dislocation
-# creep flow-laws, with distinct values for the upper crust (wet quartzite), lower
-# crust (wet anorthite) and mantle (dry olivine).  Table 1 of Naliboff and Buiter (2015),
-# Earth Planet. Sci. Lett., v.421, p. 58-67 contains values for each of these flow laws.     
+# each compositional field.  Values for viscous deformation are based on diffusion
+# creep flow-laws.     
 subsection Material model
   set Model name = visco plastic
 

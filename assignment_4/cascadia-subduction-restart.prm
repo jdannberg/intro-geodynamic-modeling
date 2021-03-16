@@ -4,10 +4,15 @@
 # - young slab being subducted
 # - flat subduction
 
-# Change the age of the subducting plate (age parameter in Initial temperature model
-# and Initial composition model; note that this is in seconds), 
-# and the activation volume of diffusion creep to change the subduction angle. 
-# You may need to reduce the resolution if this model takes a long time. 
+# Important model parameters could be the position (parameter "x_plume" in
+# the subsections Boundary velocity model and Boundary temperature model;
+# you will need to change both together so that material flows into the 
+# model at the same location where the temperature is increased) 
+# and temperature (parameter "T_plume" in the subsection Boundary temperature 
+# model) of the plume, but also the strength of the subducting plate 
+# (third value in the lists of "Prefactors for diffusion creep" and 
+# "Activation energies for diffusion creep", this is explained in more detail
+# in the Material model subsection). 
 
 set Dimension                              = 2
 set Start time                             = 0
@@ -62,13 +67,6 @@ subsection Gravity model
 end
 
 
-# We refine based on the Kelly error estimate of composition and
-# the approximated gradient of viscosity. Also, by setting
-# individual minimum and maximum refinement levels for each
-# compositional field, we have precise control on the refinement.
-# The mesh is adapted every 20
-# timesteps, such that the outline of the plates and the crust
-# itself are well refined. 
 subsection Mesh refinement
   set Initial adaptive refinement        = 2
   set Initial global refinement          = 3
@@ -138,8 +136,9 @@ subsection Boundary temperature model
   end
 end
 
-# The bottom boundary is no slip, mimicking the 660 phase transition
-# boundary, all other boundaries are free slip.
+# The bottom boundary is no slip (except for the inflow of the plume),
+# mimicking the 660 phase transition boundary, 
+# all other boundaries are free slip.
 subsection Boundary velocity model
   set Tangential velocity boundary indicators = left, top, left lithosphere, right
   set Prescribed velocity boundary indicators = bottom:function
@@ -197,11 +196,17 @@ subsection Material model
     # diffusion or composite flow law (or both, as selected here).  
     set Viscous flow law = composite
 
-    set Prefactors for dislocation creep          = 5e-18, 1e-20, 1e-18, 1e-100
+    set Prefactors for dislocation creep          = 5e-18, 1e-20, 1e-24, 1e-100
     set Stress exponents for dislocation creep    = 3.5, 3.5, 3.5,1 
     set Activation energies for dislocation creep = 5.3e5,54e4,54e4,0
     set Activation volumes for dislocation creep  = 1.4e-5,20e-6,20e-6,0 
 
+    # The third value in these lists determines the strength of the subducted
+    # lithosphere. The current values lead to a very weak slab (weaker than 
+    # what is realistic, just to demonstrate the effect). The original 
+    # parameters used to create the subducted slab were 5e-27 (instead of 5e-22) 
+    # for the Prefactors for diffusion creep, and 3.75e5 (instead of 1.75e5)
+    # for the Activation energies for diffusion creep. 
     set Prefactors for diffusion creep            = 1.5e-16, 5e-18, 5e-22, 1e-27
     set Activation energies for diffusion creep   = 3.75e5,3.75e5,1.75e5,0
     set Activation volumes for diffusion creep    = 4.9e-6,4e-6,4e-6,0

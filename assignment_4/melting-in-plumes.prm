@@ -109,30 +109,10 @@ subsection Material model
     set Reference temperature         = 1600
     set Density differential for compositional field 1 = 10
   end
-
-#  set Model name = melt simple 
-  subsection Melt simple
-    set Reference solid density = 3400
-    set Reference melt density = 2776
-    set Thermal expansion coefficient = 3.5e-5
-    set Reference permeability = 1e-8
-    set Reference shear viscosity = 2e19
-    set Reference bulk viscosity = 1e20
-    set Exponential melt weakening factor = 0
-    set Thermal viscosity exponent = 10
-    set Reference temperature = 1600
-    set Melt extraction depth = 0.0
-    set Solid compressibility = 3.2e-12
-    set Melt compressibility = 3.8462e-11
-    set Melt bulk modulus derivative = 1.6
-    set Use full compressibility = true
-  end
 end
 
 
 # Number and names of compositional fields
-# The four compositional fields represent the upper crust, lower crust, mantle
-# and a 'seed' placed in the mantle to help localize deformation.
 subsection Compositional fields
   set Number of fields = 1
   set Names of fields = pyroxenite
@@ -157,15 +137,10 @@ end
 # The final part of this input file describes how many times the
 # mesh is refined and what to do with the solution once computed
 subsection Mesh refinement
-  set Initial adaptive refinement        = 5
-  set Initial global refinement          = 0
+  set Initial adaptive refinement        = 0
+  set Initial global refinement          = 5
   set Time steps between mesh refinement = 0
   set Strategy                           = minimum refinement function
-
-  subsection Minimum refinement function
-    set Variable names = depth, z
-    set Function expression = if(depth<7000,6,if(depth<30000,5,5))
-  end
 end
 
 

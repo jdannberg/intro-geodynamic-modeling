@@ -1,5 +1,21 @@
 # Model for postglacial rebound   
 
+# Some useful parameters that may be changed are 
+# the shape/size of the ice sheet (as outlined in the comments
+# above the subsection "Boundary traction model"), and 
+# the mantle viscosity (by modifying the first entry in the
+# list of "Viscosities" in the Material model/Viscoelastic
+# subsection). The center of the ice sheet is always located
+# in the center of the model. 
+
+# You can look at different locations either using the graphical
+# output, or the separate topography.XXXXX files that are created 
+# for each output step. 
+
+# If you want to change the deglaciation history, one way of doing
+# that would be to modify the end time of deglaciation using the
+# parameter "deglaciation_end" in the "Boundary traction model". 
+
 # Global parameters
 set Dimension                              = 2
 set Start time                             = 0
@@ -64,12 +80,39 @@ subsection Boundary velocity model
   set Tangential velocity boundary indicators = bottom, left, right
 end
 
+# The section below determines the shape of the ice sheet
+# I provide 3 different function expressions that may be useful for testing, 
+# the first has the shape of a Gaussian (like the example in class), 
+# the second one assumes a rectalngular ice sheet (with the same ice thickness everywhere)
+# and the third function assumes a triangulat ice sheet (starting from a zero thickness 
+# on the left boundary and linearly inrceasing in thickness towards the right boundary). 
+
+# To use any of these function, you have to comment out the other two lines that 
+# contain a function expression by putting a # as the first character of that line. 
+# The line that does not have the # will be used
+# (in this initial version, the Gaussian is used). 
+
+# The thickness can be changed using the function constant d, 
+# and the width can be changed using the function constant l. 
+# The constant deglaciation_end determines how many years ago deglaciation ended
+# (and it is assumed that deglaciation started 18000 years ago). 
+
+# In all of the function expressions, ice sheet thickness stays constant until 18,000
+# years ago, and then decreases until the end of deglaciation (by default 5,000 years ago). 
 subsection Boundary traction model
   set Prescribed traction boundary indicators = top:function
   subsection Function
     set Variable names      = x,y,t
-    set Function constants  = d=3000,l=1e6,rho=1000,g=10, x0=3e6
-    set Function expression = 0; if(t<82000,-rho*g*d*exp(-(x-x0)^2/(2*l*l)),if(t<95000,-(95000-t)/13000.0*rho*g*d*exp(-(x-x0)^2/(2*l*l)),0))
+    set Function constants  = d=3000,l=1e6,rho=1000,g=10, x0=3e6, deglaciation_end = 5000, t_end = 100000
+
+    # Ice sheet has the form of a Gaussian with thickness d and width l
+    set Function expression = 0; if(t<82000,-rho*g*d*exp(-(x-x0)^2/(2*l*l)), if(t<t_end-deglaciation_end,-(t_end-deglaciation_end-t)/(18000 - deglaciation_end)*rho*g*d*exp(-(x-x0)^2/(2*l*l)),0))
+
+    # Ice sheet is a rectangular block with thickness d and width l
+#    set Function expression = 0; if(t<82000,if(x-x0<l/2 && x0-x<l/2,-rho*g*d,0), if(t<t_end-deglaciation_end,-(t_end-deglaciation_end-t)/(18000 - deglaciation_end)*if(x-x0<l/2 || x0-x<l/2,-rho*g*d,0),0))
+
+    # Ice sheet is a triangular block with thickness d and width l
+#    set Function expression = 0; if(t<82000,if(x-x0<l/2 && x0-x<l/2,-rho*g*d*(x-x0+l/2)/l,0), if(t<t_end-deglaciation_end,-(t_end-deglaciation_end-t)/(18000 - deglaciation_end)*if(x-x0<l/2 || x0-x<l/2,-rho*g*d*(x-x0+l/2)/l,0),0))
   end
 end
 

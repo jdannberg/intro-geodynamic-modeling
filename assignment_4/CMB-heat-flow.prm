@@ -3,12 +3,42 @@
 #
 # See the manual for more information about this setup.
 
+# Important parameters controlling the timescale of 
+# convection are the mantle viscosity (parameter 
+# "Reference shear viscosity" in the Material model) 
+# and the density of the chemically heterogeneous 
+# material (parameter "Depletion density change" in 
+# the Material model).
+
+# One interesting property in the output will be column 
+# 24, "Outward heat flux through boundary with indicator 
+# 2 ("bottom") (W)" in the statistics file. Plotting
+# how this heat flux across the core-mantle boundary
+# changes with time can be useful for comparing the
+# patterns in the paleomagnetic record to the timing of
+# high and low heat fluxes across the core-mantle boundary. 
+# Note that the magnitude of the heat flux is important
+# (and the outward heat flux through the bottom boundary
+# is negative, since heat is flowing *into* the mantle). 
+
+# If the models take too long, aborting them or reducing 
+# the "end step" in the section Termination criteria 
+# (which determines the number of time steps being 
+# executed) could be a solution. The important output
+# for comparing to paleomagnetic data is the frequency 
+# of heat flux variations (and if it changes over time). 
+
 
 set Dimension                              = 2
 set Start time                             = 0
-set End time                               = 1e10
+set End time                               = 1e100
 set Output directory                       = output-heat-flow
 set Adiabatic surface temperature          = 1600
+
+subsection Termination criteria
+  set End step                             = 2000
+  set Termination criteria                 = end step
+end
 
 	
 subsection Geometry model
@@ -69,20 +99,6 @@ subsection Material model
     set Depletion density change = 200
     set Solid compressibility = 5.124e-12
   end
-
-
-  subsection Latent heat melt
-    set Reference density = 3300
-    set Reference temperature = 1600
-    set Viscosity = 1e24
-    set Composition viscosity prefactor = 1.0
-    set Thermal viscosity exponent = 10.0
-    set Thermal conductivity = 2.38
-    set Reference specific heat = 1250
-    set Thermal expansion coefficient = 2e-5
-    set Compressibility = 5.124e-12
-    set Density differential for compositional field 1 = 100
-  end
 end
 
 
@@ -100,25 +116,29 @@ end
 
 
 subsection Postprocess
-  set List of postprocessors = visualization, temperature statistics, composition statistics, particles, heat flux map, heat flux statistics
+  set List of postprocessors = visualization, temperature statistics, composition statistics, particles, heat flux statistics
 
   subsection Visualization
-    set List of output variables = material properties
-    set Time between graphical output = 1e5
+    set List of output variables = material properties, vertical heat flux
+    set Time between graphical output = 1e8
+    set Time steps between graphical output = 20
   end
 
   subsection Particles
     set Number of particles = 100000
-    set Time between data output = 0 
     set Data output format = vtu 
-    set List of particle properties = velocity, initial composition
+    set List of particle properties = initial composition
     set Interpolation scheme = cell average
+    set Time between data output = 1e8
+    set Load balancing strategy = remove and add particles
+    set Minimum particles per cell = 10
+    set Maximum particles per cell = 50
   end 
 
 end
 
 
-# Here, we track compositional fields via active particle particles.
+# Here, we track compositional fields via active particles.
 # The initial composition assigned to the particles is 'mapped' 
 # to the particles at each time step.  This property is accessed in 
 # the material model through a compositional field (standard method) 

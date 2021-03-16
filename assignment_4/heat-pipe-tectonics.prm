@@ -1,5 +1,19 @@
 # Heat pipe tectonics
 
+# Important parameters in this setting could be the 
+# amount of heat production (in the subsection Heating
+# model, the function expression gives the amount of 
+# internal heat production) and the mantle viscosity 
+# (the first entry in the "List of Prefactors for 
+# diffusion creep"). 
+
+# Note that specifically in the cases where a heat pipe
+# develops, the model can take quite a long time to run. 
+# (whereas models without heat pipes finish much quicker). 
+# So if the models take too long, one option would be 
+# to abort the model run once you see if heat pipes will 
+# form or not. 
+
 set Additional shared libraries            = ./libheat-pipe-viscosity.so
 set Dimension                              = 2
 set Start time                             = 0
@@ -179,11 +193,12 @@ subsection Compositing
     set Densities             = 3000
     set Thermal expansivities = 2e-5
 
-    # Harmonic viscosity averaging
     set Viscosity averaging scheme = geometric
 
     set Viscous flow law = diffusion
 
+    # The first value in this list can be modified to change the
+    # mantle viscosity. Higher values decrease the viscosity. 
     set Prefactors for diffusion creep            = 5e-18, 1e-20, 5e-18
     set Activation energies for diffusion creep   = 4.5e5,0,3.75e5
     set Activation volumes for diffusion creep    = 4e-6,0,4e-6
